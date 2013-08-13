@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link href="css/reset.css" rel="stylesheet"/>
+    <link href="css/base.css" rel="stylesheet"/>
+    <link href="css/usercenter.css" rel="stylesheet"/>
+    <style>
+    .avatar-wrap{position: relative;float:left;}
+    .avatar-area { position: absolute; left: 0; top: 0;width:800px;}
+    #cropper{ position: absolute; right: 0; top: 40px; border: 1px solid #ccc;width:420px;height:420px;background: url(images/usercenter/avatar_default.gif) no-repeat;}
+    #previewContainer { position: absolute; left: 0; top: 0;width:360px;height:500px; border-right:1px solid #e0e0e0;}
+    .preview { border: 1px solid #ccc; }
+    .btn-area{ position: absolute; left:378px; top: 0; width:300px;}
+    .btn-area #selectBtn {float:left;width: 101px; height: 30px; background: url(images/usercenter/btn_avatar.gif) no-repeat 0 0; }
+    .btn-area .btn_m_h{float:left;margin-left:20px;display: inline;}
+    #preview120{width:120px;height:120px;background: url(images/usercenter/avatar_120x120.gif) no-repeat;}
+    #preview48{width:48px;height:48px;background: url(images/usercenter/avatar_48x48.gif) no-repeat;}
+    #preview32{width:32px;height:32px;background: url(images/usercenter/avatar_32x32.gif) no-repeat;}
+    #rotateLeftBtn { position: absolute; right: 320px; top: 470px;width: 50px; height: 26px; padding-left: 34px; padding-top: 2px;background: url(images/usercenter/btn_avatar.gif) no-repeat 0 -30px; }
+    #rotateRightBtn { position: absolute; right:20px; top: 470px; width: 50px; height: 26px;padding-right: 30px; padding-top: 2px; background: url(images/usercenter/btn_avatar.gif) no-repeat right -30px;;}
+    </style>
+    <script src="js/jqueryplugin/imagecropper.min.js"></script>
+    <script type="text/javascript">
+
+        var cropper;
+
+        function init()
+        {
+            cropper = new ImageCropper(300, 300, 180, 180);
+            cropper.setCanvas("cropper");
+            cropper.addPreview("preview120");
+            cropper.addPreview("preview48");
+            cropper.addPreview("preview32");
+
+            if(!cropper.isAvaiable())
+            {
+                alert("Sorry, your browser doesn't support FileReader, please use Firefox3.6+ or Chrome10+ to run it.");
+            }
+        }
+
+        function selectImage(fileList)
+        {
+            cropper.loadImage(fileList[0]);
+        }
+
+        function rotateImage(e)
+        {
+            switch(e.target.id)
+            {
+                case "rotateLeftBtn":
+                    cropper.rotate(-90);
+                    break;
+                case "rotateRightBtn":
+                    cropper.rotate(90);
+                    break;
+            }
+        }
+
+        function saveImage()
+        {
+            var imgData = cropper.getCroppedImageData(180, 180);
+
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function(e)
+            {
+                if(xhr.readyState == 4)
+                {
+                    if(xhr.status == 200)
+                    {
+                        document.getElementById("status").innerHTML = "<font color='#f00'>上传成功！</font>";
+                    }
+                }
+            };
+
+            xhr.open("post", "http://localhost:8080/uploader/action.do", true);
+            var data = new FormData();
+            data.append("username", "flashlizi");
+            data.append("size", 180);
+            data.append("file", imgData);
+            xhr.send(data);
+        }
+
+        function trace()
+        {
+            if(typeof(console) != "undefined") console.log(Array.prototype.slice.apply(arguments).join(" "));
+        };
+
+    </script>
+
+
+</head>
+<body onload="init();">
+<div class="wrapper">
+    <div class="wrap-menu fl">
+        <dl class="mod-menu">
+            <dt class="mod-hd">
+            <h3>订单中心</h3>
+            </dt>
+            <dd class="mod-bd">
+                <ul class="list-menu">
+                    <li><a href="CustomerCenter_Order.aspx" id="CustomerCenter_Order">我的订单</a></li>
+                    <li><a href="CustomerCenter_favorites.aspx" id="CustomerCenter_favorites">我的收藏</a></li>
+                    <li><a href="CustomerCenter_StockRegister.aspx" id="CustomerCenter_StockRegister">我的到货通知</a></li>
+                </ul>
+            </dd>
+        </dl>
+
+        <dl class="mod-menu">
+            <dt class="mod-hd">
+            <h3>账户中心</h3>
+            </dt>
+            <dd class="mod-bd">
+                <ul class="list-menu">
+                    <li><a href="CustomerCenter_Info.aspx" id="CustomerCenter_Info">基本信息</a></li>
+                    <li class="status-hover"><a href="CustomerCenter_Avator.aspx" id="CustomerCenter_Avator">修改头像</a></li>
+                    <li><a href="CustomerCenter_ChangePsw.aspx" id="CustomerCenter_ChangePsw">账户安全</a></li>
+                    <li><a href="CustomerCenter_Baby.aspx" id="CustomerCenter_Baby">宝宝信息</a></li>
+                    <li><a href="CustomerCenter_Consignee.aspx" id="CustomerCenter_Consignee">收货地址</a></li>
+                    <li><a href="CustomerCenter_MyScores.aspx" id="CustomerCenter_MyScores">幸运星积分</a></li>
+                    <li><a href="CustomerCenter_Coupon.aspx" id="CustomerCenter_Coupon">优惠券</a></li>
+                    <li><a href="CustomerCenter_MyFriend.aspx" id="CustomerCenter_MyFriend">邀请好友</a></li>
+                    <li><a href="CustomerCenter_binding.aspx" id="CustomerCenter_binding">社交绑定</a></li>
+                </ul>
+            </dd>
+        </dl>
+
+        <dl class="mod-menu">
+            <dt class="mod-hd">
+            <h3>社区中心</h3>
+            </dt>
+            <dd class="mod-bd">
+                <ul class="list-menu">
+                    <li><a href="CustomerCenter_Consult.aspx" id="CustomerCenter_Consult">商品咨询</a></li>
+                    <li><a href="CustomerCenter_Discussion.aspx" id="CustomerCenter_Discussion">我的评价</a></li>
+                    <li><a href="CustomerCenter_Suggestion.aspx" id="CustomerCenter_Suggestion">投诉与建议</a></li>
+                </ul>
+            </dd>
+        </dl>
+    </div>
+
+    <div class="wrap-mycenter fr">
+        <div class="mod-info">
+            <div class="mod-hd"><h3>修改头像</h3></div>
+            <div class="mod-bd" style="height:500px;">
+                <div class="mod-content avatar-wrap">
+                        <div class="btn-area">
+                            <a id="selectBtn" href="javascript:void(0);" onclick="document.getElementById('input').click();"></a>
+                            <span class="btn_m btn_m_h"><a href="javascript:void(0);" onclick="saveImage();"  id="saveBtn">保存</a></span>
+                        </div>
+
+                        <input type="file" id="input" size="10" style="visibility:hidden;" onchange="selectImage(this.files)" />
+
+                        <div class="avatar-area">
+                            <canvas id="cropper" width="300" height="300"></canvas>
+                            <a id="rotateLeftBtn" href="javascript:void(0);" onclick="rotateImage(event);">向左旋转</a>
+                            <a id="rotateRightBtn" href="javascript:void(0);" onclick="rotateImage(event);">向右旋转</a>
+                            <span id="status" style="position:absolute;left:640px;top:180px;width:100px;"></span>
+
+                            <div id="previewContainer">
+                                <canvas id="preview120" class="preview"></canvas>
+                                <span style="position:absolute;left:0px;top:128px;width:120px;text-align:center;">120x120</span>
+
+
+                                <canvas id="preview48" style="position:absolute;left:160px;top:0px;" class="preview"></canvas>
+                                <span style="position:absolute;left:162px;top:54px;width:48px;text-align:center;">48x48</span>
+
+                                <canvas id="preview32"  style="position:absolute;left:248px;top:0px;" class="preview"></canvas>
+                                <span style="position:absolute;left:250px;top:38px;width:32px;text-align:center;">32x32</span>
+                                <div style="position: absolute;top:200px;">
+                                    您上传的头像会自动生成三种尺寸,请注意中小尺寸的头像是否清晰
+                                </div>
+                            </div>
+
+                        </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div><!--wrapper-->
+</body>
+
+</html>
